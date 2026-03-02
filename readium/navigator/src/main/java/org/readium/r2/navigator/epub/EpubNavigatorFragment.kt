@@ -126,6 +126,20 @@ public class EpubNavigatorFragment internal constructor(
     HyperlinkNavigator,
     Configurable<EpubSettings, EpubPreferences> {
 
+    public val isAtLastPage: Boolean
+        get() {
+            val adapter = resourcePager.adapter ?: return false
+
+            // Not on the last resource
+            if (resourcePager.currentItem < adapter.count - 1) return false
+
+            // On the last resource - check internal pages
+            val webView = currentReflowablePageFragment?.webView ?: return true
+
+            return webView.mCurItem >= webView.numPages - 1
+        }
+
+
     // Make a copy to prevent the user from modifying the configuration after initialization.
     internal val config: Configuration = configuration.copy().apply {
         servedAssets += "readium/.*"
